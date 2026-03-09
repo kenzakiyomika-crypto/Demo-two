@@ -1,0 +1,20 @@
+{
+  "name": "Operator Training System",
+  "short_name": "Operator",
+  "description": "ระบบฝึก Military Fitness RPG — Game-Science Hybrid",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0e0e10",
+  "theme_color": "#0e0e10",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "categories": ["health", "fitness", "lifestyle"],
+  "lang": "th",
+  "dir": "ltr"
+}

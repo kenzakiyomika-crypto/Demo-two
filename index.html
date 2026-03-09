@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <script>console.log("BUILD 999");</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Operator">
+  <meta name="theme-color" content="#0b0f14">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Operator Training System</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo">⚡</div>
+    <div class="splash-title">OPERATOR</div>
+    <div class="splash-sub">TRAINING SYSTEM</div>
+    <div class="splash-bar"><div class="splash-fill"></div></div>
+  </div>
+</div>
+
+<!-- ══ PROFILE SELECTION SCREEN ══════════════════════════════ -->
+<div id="profile-select-screen" class="screen hidden">
+  <div class="profile-select-wrap">
+    <div class="profile-select-header">
+      <div class="profile-select-logo">⚡</div>
+      <h1>OPERATOR</h1>
+      <p class="profile-select-sub">ศูนย์ควบคุมกำลังพล — เลือกโปรไฟล์</p>
+    </div>
+    <div id="profile-list" class="profile-list"></div>
+    <div class="profile-actions">
+      <button class="btn-primary btn-full" onclick="ProfileUI.showCreate()">+ สร้างโปรไฟล์ใหม่</button>
+    </div>
+    <div class="profile-storage-info" id="storage-info"></div>
+  </div>
+</div>
+
+<!-- ══ PROFILE CREATE MODAL ══════════════════════════════════ -->
+<div id="profile-create-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>🪖 สร้างโปรไฟล์ใหม่</h3>
+      <button class="modal-close" onclick="ProfileUI.hideCreate()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>ชื่อเรียกขาน</label>
+        <input type="text" id="new-profile-name" placeholder="ชื่อเล่น / ชื่อจริง" maxlength="20">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>อายุ</label>
+          <input type="number" id="new-profile-age" placeholder="25" min="16" max="60">
+        </div>
+        <div class="form-group">
+          <label>น้ำหนัก (กก.)</label>
+          <input type="number" id="new-profile-weight" placeholder="70" min="40" max="200">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>ระดับความฟิต</label>
+        <div class="radio-group">
+          <label class="radio-btn"><input type="radio" name="new-fitness" value="beginner" checked><span>มือใหม่</span></label>
+          <label class="radio-btn"><input type="radio" name="new-fitness" value="intermediate"><span>ปานกลาง</span></label>
+          <label class="radio-btn"><input type="radio" name="new-fitness" value="advanced"><span>ขั้นสูง</span></label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary btn-full" onclick="ProfileUI.confirmCreate()">สร้างโปรไฟล์ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING -->
+<!-- ══ ONBOARDING STEP 1: PROFILE ══════════════════════════════ -->
+<div id="onboarding-screen" class="screen hidden">
+  <div class="onboard-wrap">
+    <div class="onboard-header">
+      <div class="onboard-step-indicator">
+        <span class="step active">1</span>
+        <span class="step-line"></span>
+        <span class="step">2</span>
+        <span class="step-line"></span>
+        <span class="step">3</span>
+      </div>
+      <div class="onboard-icon">🪖</div>
+      <h1>ข้อมูลพื้นฐาน</h1>
+      <p>ระบบจะใช้ข้อมูลนี้คำนวณค่าสถานะและโปรแกรมฝึก</p>
+    </div>
+    <div class="onboard-form">
+      <div class="form-group">
+        <label>ชื่อ</label>
+        <input type="text" id="ob-name" placeholder="ชื่อเล่น / ชื่อจริง">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>อายุ</label>
+          <input type="number" id="ob-age" placeholder="25" min="16" max="60">
+        </div>
+        <div class="form-group">
+          <label>ส่วนสูง (ซม.)</label>
+          <input type="number" id="ob-height" placeholder="175" min="140" max="220">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>น้ำหนัก (กก.)</label>
+        <input type="number" id="ob-weight" placeholder="75" min="40" max="200">
+      </div>
+      <div class="form-group">
+        <label>ระดับความฟิตปัจจุบัน</label>
+        <div class="radio-group">
+          <label class="radio-btn"><input type="radio" name="fitness" value="beginner" checked><span>มือใหม่</span></label>
+          <label class="radio-btn"><input type="radio" name="fitness" value="intermediate"><span>ปานกลาง</span></label>
+          <label class="radio-btn"><input type="radio" name="fitness" value="advanced"><span>ขั้นสูง</span></label>
+        </div>
+      </div>
+      <button class="btn-primary btn-full" onclick="goToGoalConfig()">ถัดไป: ตั้งเป้าหมาย →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING STEP 2: GOAL CONFIGURATION ══════════════════ -->
+<div id="goal-config-screen" class="screen hidden">
+  <div class="onboard-wrap">
+    <div class="onboard-header">
+      <div class="onboard-step-indicator">
+        <span class="step done">✓</span>
+        <span class="step-line active"></span>
+        <span class="step active">2</span>
+        <span class="step-line"></span>
+        <span class="step">3</span>
+      </div>
+      <div class="onboard-icon">🎯</div>
+      <h1>เป้าหมายของคุณ</h1>
+      <p>ระบบจะปรับ Attribute Scaling และตารางฝึกตามเป้าหมาย</p>
+    </div>
+    <div class="onboard-form">
+
+      <!-- Primary Goal -->
+      <div class="form-group">
+        <label>เป้าหมายหลัก <span style="color:#78cc55">(เลือก 1 ข้อ)</span></label>
+        <div class="goal-card-grid" id="primary-goal-grid">
+          <label class="goal-card" data-goal="strength">
+            <input type="radio" name="primary_goal" value="strength">
+            <div class="goal-card-icon">🏋️</div>
+            <div class="goal-card-label">ความแข็งแรง</div>
+            <div class="goal-card-sub">STR ×1.3 | 3-6 reps</div>
+          </label>
+          <label class="goal-card" data-goal="hypertrophy">
+            <input type="radio" name="primary_goal" value="hypertrophy">
+            <div class="goal-card-icon">💪</div>
+            <div class="goal-card-label">กล้ามเนื้อใหญ่</div>
+            <div class="goal-card-sub">PRC ×1.2 | 8-12 reps</div>
+          </label>
+          <label class="goal-card" data-goal="fat_loss">
+            <input type="radio" name="primary_goal" value="fat_loss">
+            <div class="goal-card-icon">🔥</div>
+            <div class="goal-card-label">ลดไขมัน</div>
+            <div class="goal-card-sub">END ×1.2 | Circuit</div>
+          </label>
+          <label class="goal-card" data-goal="endurance">
+            <input type="radio" name="primary_goal" value="endurance">
+            <div class="goal-card-icon">🏃</div>
+            <div class="goal-card-label">ความทนทาน</div>
+            <div class="goal-card-sub">END ×1.4 | SPD ×1.2</div>
+          </label>
+          <label class="goal-card" data-goal="military_prep">
+            <input type="radio" name="primary_goal" value="military_prep">
+            <div class="goal-card-icon">🪖</div>
+            <div class="goal-card-label">เตรียมสอบทหาร</div>
+            <div class="goal-card-sub">DISC ×1.3 | ครบทุกด้าน</div>
+          </label>
+          <label class="goal-card" data-goal="hybrid">
+            <input type="radio" name="primary_goal" value="hybrid" checked>
+            <div class="goal-card-icon">⚡</div>
+            <div class="goal-card-label">ฟิตรอบด้าน</div>
+            <div class="goal-card-sub">สมดุลทุก stat</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Secondary Goal -->
+      <div class="form-group">
+        <label>เป้าหมายรอง <span style="color:#aaa">(ไม่บังคับ)</span></label>
+        <div class="radio-group" style="flex-wrap:wrap;gap:8px">
+          <label class="radio-btn"><input type="radio" name="secondary_goal" value="none" checked><span>ไม่มี</span></label>
+          <label class="radio-btn"><input type="radio" name="secondary_goal" value="strength"><span>💪 แข็งแรง</span></label>
+          <label class="radio-btn"><input type="radio" name="secondary_goal" value="fat_loss"><span>🔥 ลดไขมัน</span></label>
+          <label class="radio-btn"><input type="radio" name="secondary_goal" value="endurance"><span>🏃 ทนทาน</span></label>
+        </div>
+      </div>
+
+      <!-- Body Focus Priority -->
+      <div class="form-group">
+        <label>Priority ส่วนร่างกาย</label>
+        <p style="color:#aaa;font-size:12px;margin:4px 0 10px">3 = เน้นมาก, 2 = กลาง, 1 = น้อย</p>
+        <div class="focus-grid">
+          <div class="focus-row">
+            <span class="focus-label">💪 Upper Body</span>
+            <div class="focus-btns" data-area="upper">
+              <button class="focus-btn" data-val="1">1</button>
+              <button class="focus-btn" data-val="2">2</button>
+              <button class="focus-btn active" data-val="3">3</button>
+            </div>
+          </div>
+          <div class="focus-row">
+            <span class="focus-label">🦵 Lower Body</span>
+            <div class="focus-btns" data-area="lower">
+              <button class="focus-btn" data-val="1">1</button>
+              <button class="focus-btn active" data-val="2">2</button>
+              <button class="focus-btn" data-val="3">3</button>
+            </div>
+          </div>
+          <div class="focus-row">
+            <span class="focus-label">🎯 Core</span>
+            <div class="focus-btns" data-area="core">
+              <button class="focus-btn active" data-val="1">1</button>
+              <button class="focus-btn" data-val="2">2</button>
+              <button class="focus-btn" data-val="3">3</button>
+            </div>
+          </div>
+          <div class="focus-row">
+            <span class="focus-label">🏃 Cardio</span>
+            <div class="focus-btns" data-area="cardio">
+              <button class="focus-btn" data-val="1">1</button>
+              <button class="focus-btn active" data-val="2">2</button>
+              <button class="focus-btn" data-val="3">3</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="btn-outline" style="flex:1" onclick="goToStep(1)">← ย้อนกลับ</button>
+        <button class="btn-primary" style="flex:2" onclick="goToBaselineTest()">ถัดไป: ทดสอบร่างกาย →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ONBOARDING STEP 3: BASELINE TEST ═══════════════════════ -->
+<div id="baseline-screen" class="screen hidden">
+  <div class="onboard-wrap">
+    <div class="onboard-header">
+      <div class="onboard-step-indicator">
+        <span class="step done">✓</span>
+        <span class="step-line active"></span>
+        <span class="step done">✓</span>
+        <span class="step-line active"></span>
+        <span class="step active">3</span>
+      </div>
+      <div class="onboard-icon">📋</div>
+      <h1>ทดสอบร่างกายเริ่มต้น</h1>
+      <p>ใช้กำหนดจุดตั้งต้นสำหรับระบบยศทหาร — ข้ามได้ถ้ายังไม่รู้</p>
+    </div>
+    <div class="onboard-form">
+      <div class="form-group">
+        <label>Push-up สูงสุด (ครั้ง) <span style="color:#aaa">ทำได้กี่ครั้งก่อนหยุด</span></label>
+        <input type="number" id="bl-pushup" placeholder="0 = ยังไม่ทดสอบ" min="0" max="500">
+      </div>
+      <div class="form-group">
+        <label>Pull-up สูงสุด (ครั้ง)</label>
+        <input type="number" id="bl-pullup" placeholder="0 = ยังไม่ทดสอบ" min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label>วิ่ง 2.4km เวลา (นาที) <span style="color:#aaa">เช่น 12.5</span></label>
+        <input type="number" id="bl-run2km" placeholder="0 = ยังไม่ทดสอบ" min="0" max="60" step="0.5">
+      </div>
+      <div class="form-group">
+        <label>Plank สูงสุด (นาที)</label>
+        <input type="number" id="bl-plank" placeholder="0 = ยังไม่ทดสอบ" min="0" max="60" step="0.5">
+      </div>
+      <div class="form-group">
+        <label>วันฝึกต่อสัปดาห์ที่ทำได้จริง</label>
+        <div class="radio-group">
+          <label class="radio-btn"><input type="radio" name="days_per_week" value="3"><span>3 วัน</span></label>
+          <label class="radio-btn"><input type="radio" name="days_per_week" value="4" checked><span>4 วัน</span></label>
+          <label class="radio-btn"><input type="radio" name="days_per_week" value="5"><span>5 วัน</span></label>
+          <label class="radio-btn"><input type="radio" name="days_per_week" value="6"><span>6 วัน</span></label>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="btn-outline" style="flex:1" onclick="goToStep(2)">← ย้อนกลับ</button>
+        <button class="btn-primary" style="flex:2" onclick="saveFullOnboarding()">⚡ เริ่มภารกิจ!</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" class="hidden" style="height:100dvh;height:-webkit-fill-available;display:flex;flex-direction:column">
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="top-left">
+      <div class="rank-badge" id="rank-badge">🪖</div>
+      <div class="top-info">
+        <div class="top-name" id="top-name">Operator</div>
+        <div class="top-rank" id="top-rank">Recruit</div>
+      </div>
+    </div>
+    <div class="top-right">
+      <div class="streak-badge">🔥 <span id="streak-count">0</span></div>
+      <div class="xp-badge">⚡ <span id="xp-count">0</span></div>
+    </div>
+  </header>
+
+  <!-- SCREENS -->
+  <main id="screens">
+
+    <!-- ══ DASHBOARD ══════════════════════════════════════════ -->
+    <section id="screen-dashboard" class="app-screen active">
+      <div class="screen-scroll">
+
+        <!-- Phase banner -->
+        <div class="phase-banner" id="phase-banner">
+          <div class="phase-icon">🏗️</div>
+          <div class="phase-info">
+            <div class="phase-name">Phase 1 – Base Building</div>
+            <div class="phase-week">สัปดาห์ที่ 1 / 16</div>
+          </div>
+          <div class="phase-progress-wrap">
+            <div class="phase-progress-bar">
+              <div class="phase-progress-fill" id="phase-fill" style="width:6%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- XP bar -->
+        <div class="xp-card">
+          <div class="xp-label">XP Progress to Next Rank</div>
+          <div class="xp-bar-wrap">
+            <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="xp-numbers"><span id="xp-current">0</span> / <span id="xp-next">500</span> XP</div>
+        </div>
+
+        <!-- Readiness box -->
+        <div class="readiness-box">
+          <div id="readiness-label">Readiness: <span id="readiness-score">100</span>%  🟢 พร้อมเต็มที่</div>
+          <div class="bar">
+            <div id="readiness-fill" data-alias="readiness-bar-fill" style="width:100%;background:#2ecc71"></div>
+          </div>
+          <div id="readiness-advice" style="color:#2ecc71;font-size:11px;margin-top:4px">ฝึกหนักได้เลย!</div>
+        </div>
+
+        <!-- ENGINE READINESS RING -->
+        <div id="readiness-widget-container" class="readiness-container"></div>
+
+        <!-- Engine next workout suggestion -->
+        <div id="engine-next-workout" class="engine-next-card" style="display:none"></div>
+
+        <!-- META HUD: Character Sheet preview -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 4px">
+          <div class="section-title" style="margin:0">⚔️ Character</div>
+          <button onclick="GameLoop.showMetaOverlay()" style="background:#1c1c2c;border:1px solid #333;color:#78cc55;padding:5px 12px;border-radius:20px;font-size:12px;cursor:pointer">Full Sheet ▶</button>
+        </div>
+        <div id="meta-hud" style="margin-bottom:8px"></div>
+
+        <!-- Muscle Recovery Grid -->
+        <div class="section-title">💪 Muscle Recovery</div>
+        <div id="muscle-grid"></div>
+
+        <!-- Daily missions -->
+        <div class="section-title">ภารกิจประจำวัน</div>
+        <div id="daily-missions-preview" class="mission-list"></div>
+
+        <!-- GTG -->
+        <div class="section-title">GTG Pullup วันนี้</div>
+        <div class="gtg-card">
+          <div class="gtg-count" id="gtg-count">0</div>
+          <div class="gtg-goal">เป้าหมาย: 50 ครั้ง</div>
+          <div class="gtg-bar-wrap">
+            <div class="gtg-bar-fill" id="gtg-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="gtg-btns">
+            <button class="gtg-btn" onclick="addGTG(1)">+1</button>
+            <button class="gtg-btn gtg-btn-lg" onclick="addGTG(5)">+5</button>
+          </div>
+        </div>
+
+        <!-- Weight -->
+        <div class="section-title">น้ำหนัก</div>
+        <div class="weight-summary-card">
+          <div class="weight-current"><span id="dash-weight">--</span> <small>กก.</small></div>
+          <div class="weight-goal-info">เป้าหมาย: 80 กก. | ลดแล้ว: <span id="weight-lost">0</span> กก.</div>
+          <canvas id="weight-mini-chart" height="80"></canvas>
+        </div>
+
+        <!-- Week grid -->
+        <div class="section-title">สัปดาห์นี้</div>
+        <div class="week-grid" id="week-grid"></div>
+      </div>
+    </section>
+
+    <!-- ══ WORKOUT LOG ════════════════════════════════════════ -->
+    <section id="screen-workout" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header">
+          <h2>บันทึกการฝึก</h2>
+          <button class="btn-sm" onclick="openWorkoutModal()">+ เพิ่ม</button>
+        </div>
+        <div id="workout-history" class="workout-list"></div>
+      </div>
+    </section>
+
+    <!-- ══ PROGRAM ════════════════════════════════════════════ -->
+    <section id="screen-program" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header">
+          <h2>ตารางฝึก</h2>
+          <button class="btn-sm" onclick="generateLocalProgram()">🔄 สร้างใหม่</button>
+        </div>
+
+        <div class="ai-gen-card">
+          <div class="ai-gen-header">
+            <span class="ai-gen-icon">✨</span>
+            <div>
+              <div class="ai-gen-title">AI สร้างโปรแกรมส่วนตัว</div>
+              <div class="ai-gen-sub">AI วิเคราะห์ Fatigue ก่อนสร้างโปรแกรมเสมอ</div>
+            </div>
+          </div>
+          <div class="goal-quick-btns">
+            <button onclick="setQuickGoal('ดึงข้อ 25 ครั้งใน 3 เดือน')">🎯 Pullup 25</button>
+            <button onclick="setQuickGoal('ลดน้ำหนัก 10 กิโล ใน 4 เดือน')">⚖️ ลด 10kg</button>
+            <button onclick="setQuickGoal('วิ่ง 1.6 km ต่ำกว่า 7 นาที')">🏃 Run test</button>
+            <button onclick="setQuickGoal('สอบหน่วยรบพิเศษ ต้องการ pushups 100 situps 100 pullups 25')">🪖 สอบทหาร</button>
+          </div>
+          <textarea id="custom-goal-input" rows="3" placeholder="เช่น อยากดึงข้อ 20 ครั้ง ลดน้ำหนักเหลือ 80 กก. และวิ่ง 1.6 กม. ต่ำกว่า 7:30 ใน 3 เดือน"></textarea>
+          <div class="eq-summary-badge" id="eq-summary-badge" style="display:none"></div>
+          <button class="btn-primary btn-full ai-gen-btn" id="ai-gen-btn" onclick="generateAIProgram()">
+            ✨ ให้ AI สร้างโปรแกรม
+          </button>
+        </div>
+
+        <div id="program-content"></div>
+      </div>
+    </section>
+
+    <!-- ══ MISSIONS ═══════════════════════════════════════════ -->
+    <section id="screen-missions" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header">
+          <h2>ภารกิจประจำวัน</h2>
+          <div class="mission-xp-total">XP วันนี้: <span id="mission-xp-today">0</span></div>
+        </div>
+        <div id="all-missions" class="mission-list"></div>
+        <div class="section-title" style="margin-top:20px">GTG Pullup Counter</div>
+        <div class="gtg-card">
+          <div class="gtg-count" id="gtg-count2">0</div>
+          <div class="gtg-goal">เป้าหมาย 50 ครั้งต่อวัน</div>
+          <div class="gtg-bar-wrap">
+            <div class="gtg-bar-fill" id="gtg-bar-fill2" style="width:0%"></div>
+          </div>
+          <div class="gtg-btns">
+            <button class="gtg-btn" onclick="addGTG(1)">+1</button>
+            <button class="gtg-btn gtg-btn-lg" onclick="addGTG(5)">+5</button>
+            <button class="gtg-btn" onclick="addGTG(10)">+10</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ PROGRESS ═══════════════════════════════════════════ -->
+    <section id="screen-progress" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header">
+          <h2>ความก้าวหน้า</h2>
+          <button class="btn-sm" onclick="openFitnessTest()">🏆 ทดสอบ</button>
+        </div>
+        <div class="section-title">น้ำหนัก (กก.)</div>
+        <div class="log-weight-row">
+          <input type="number" id="weight-input" placeholder="96.0" step="0.1">
+          <button class="btn-primary" onclick="logWeight()">บันทึก</button>
+        </div>
+        <canvas id="weight-chart" height="200"></canvas>
+
+        <div class="section-title" style="margin-top:20px">ประวัติการทดสอบสมรรถภาพ</div>
+        <div id="fitness-test-history"></div>
+
+        <div class="section-title">Pullup Progression</div>
+        <div class="pullup-progress-card">
+          <div id="pullup-stage-info"></div>
+          <div class="pullup-bar-wrap">
+            <div class="pullup-bar-fill" id="pullup-bar-fill" style="width:0%"></div>
+          </div>
+          <div class="pullup-nums"><span id="pullup-current-max">0</span> / 25 pullups</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ STATS ══════════════════════════════════════════════ -->
+    <!-- ══ CHARACTER SHEET (RPG HUB) ══════════════════════════ -->
+    <section id="screen-character" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header" style="padding:12px 16px 0">
+          <div id="char-rank-banner" class="char-rank-banner">
+            <div class="char-rank-emoji" id="char-rank-emoji">👤</div>
+            <div class="char-rank-info">
+              <div class="char-rank-name" id="char-rank-name">พลเรือน</div>
+              <div class="char-rank-nato" id="char-rank-nato">Civilian</div>
+            </div>
+            <div class="char-cp-box">
+              <div class="char-cp-label">Combat Power</div>
+              <div class="char-cp-value" id="char-cp-value">0</div>
+            </div>
+          </div>
+          <!-- Rank progress bar -->
+          <div class="char-rank-progress">
+            <div class="char-rank-progress-fill" id="char-rank-fill" style="width:0%"></div>
+          </div>
+          <div class="char-rank-next" id="char-rank-next">ต้องการ 50 CP เพื่อเลื่อนยศ</div>
+        </div>
+
+        <!-- DUAL VIEW: Stats + Dashboard side by side on wide screens, stacked on mobile -->
+        <div class="char-dual-grid">
+
+          <!-- LEFT: Stats Radar + Stat List -->
+          <div class="char-left-panel">
+            <div class="char-panel-title">⚔️ RPG Stats</div>
+            <canvas id="char-radar-chart" width="220" height="220" style="display:block;margin:0 auto"></canvas>
+            <div id="char-stat-list" class="char-stat-list"></div>
+          </div>
+
+          <!-- RIGHT: Today's Dashboard -->
+          <div class="char-right-panel">
+            <div class="char-panel-title">📋 Dashboard</div>
+            <!-- Readiness ring (compact) -->
+            <div class="char-readiness-row">
+              <div class="char-readiness-ring" id="char-readiness-ring">
+                <svg viewBox="0 0 80 80" width="80" height="80">
+                  <circle cx="40" cy="40" r="32" stroke="#1e293b" stroke-width="8" fill="none"/>
+                  <circle id="char-readiness-arc" cx="40" cy="40" r="32" stroke="#2ecc71" stroke-width="8" fill="none"
+                    stroke-dasharray="201" stroke-dashoffset="50" stroke-linecap="round"
+                    transform="rotate(-90 40 40)"/>
+                </svg>
+                <div class="char-readiness-label">
+                  <span id="char-readiness-val">100</span>%
+                </div>
+              </div>
+              <div class="char-readiness-text">
+                <div class="char-readiness-title">Readiness</div>
+                <div id="char-readiness-advice" class="char-readiness-advice">พร้อมเต็มที่</div>
+              </div>
+            </div>
+            <!-- Daily quests (compact) -->
+            <div class="char-panel-subtitle">ภารกิจวันนี้</div>
+            <div id="char-daily-quests" class="char-daily-quests"></div>
+            <!-- Streak display -->
+            <div class="char-streak-box">
+              <span class="char-streak-fire">🔥</span>
+              <span id="char-streak-count" class="char-streak-count">0</span>
+              <span class="char-streak-label">วัน ต่อเนื่อง</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MEDALS SECTION -->
+        <div class="section-title" style="margin-top:16px">🎖️ เหรียญเกียรติยศ</div>
+        <div id="char-medals" class="char-medals-grid"></div>
+
+        <!-- SPECIAL FORCES BENCHMARK -->
+        <div class="section-title" style="margin-top:16px">🔱 มาตรฐานหน่วยรบพิเศษ</div>
+        <div id="char-sf-tiers" class="char-sf-tiers"></div>
+
+        <!-- Physical Test Input -->
+        <div class="section-title" style="margin-top:16px">📋 บันทึกผลทดสอบร่างกาย</div>
+        <div class="char-test-form">
+          <div class="char-test-row">
+            <label>Push-up สูงสุด (ครั้ง)</label>
+            <input type="number" id="test-pushup" placeholder="35" min="0" max="500">
+          </div>
+          <div class="char-test-row">
+            <label>Pull-up สูงสุด (ครั้ง)</label>
+            <input type="number" id="test-pullup" placeholder="10" min="0" max="100">
+          </div>
+          <div class="char-test-row">
+            <label>วิ่ง 2.4km (นาที)</label>
+            <input type="number" id="test-run2km" placeholder="12.5" step="0.1" min="0" max="60">
+          </div>
+          <div class="char-test-row">
+            <label>วิ่ง 5km (นาที)</label>
+            <input type="number" id="test-run5km" placeholder="25" step="0.1" min="0" max="120">
+          </div>
+          <div class="char-test-row">
+            <label>Plank (นาที)</label>
+            <input type="number" id="test-plank" placeholder="2.0" step="0.5" min="0" max="60">
+          </div>
+          <button class="char-test-submit" onclick="submitPhysicalTest()">บันทึกผลทดสอบ</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══ STATS (existing) ══════════════════════════════════== -->
+    <section id="screen-stats" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header"><h2>สถิติ</h2></div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="section-title">ผลทดสอบล่าสุด</div>
+        <div id="latest-test-stats" class="test-stats-wrap"></div>
+      </div>
+    </section>
+
+    <!-- ══ AI ANALYZE ═════════════════════════════════════════ -->
+    <section id="screen-analyze" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header"><h2>AI วิเคราะห์</h2></div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">💪 Muscle Recovery Status</div>
+          <div id="muscle-grid-analyze"></div>
+          <button class="btn-outline btn-full" style="margin-top:10px" onclick="renderMuscleGrid();renderFatigueGrid()">🔄 อัปเดต</button>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">💀 Muscle Fatigue Map</div>
+          <div class="fatigue-grid" id="fatigue-grid"></div>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">📊 Training Volume (7 วัน)</div>
+          <canvas id="volume-chart" height="160"></canvas>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">📈 Progressive Overload</div>
+          <div id="progression-list"></div>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">🤖 AI วิเคราะห์การฝึก</div>
+          <div class="analyze-btns">
+            <button class="btn-primary btn-full" onclick="analyzeAndAdjustProgram()" style="grid-column:1/-1;margin-bottom:4px">🔄 วิเคราะห์ Log + ปรับโปรแกรม</button>
+            <button class="btn-outline" onclick="aiAnalyzeFatigue()">💀 วิเคราะห์ความล้า</button>
+            <button class="btn-outline" onclick="aiAnalyzeProgress()">📈 ความก้าวหน้า</button>
+            <button class="btn-outline" onclick="aiSuggestNextWeek()">📋 สัปดาห์หน้า</button>
+            <button class="btn-outline" onclick="generateYearProgram()">📅 12 เดือน</button>
+          </div>
+          <div id="ai-analysis-result" class="ai-analysis-box" style="display:none"></div>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">📅 12 เดือน Periodization</div>
+          <div id="year-plan-widget"></div>
+          <button class="btn-primary btn-full" style="margin-top:12px" onclick="generateYearProgram()">✨ ให้ AI ขยายรายละเอียด</button>
+        </div>
+
+        <div class="analyze-card">
+          <div class="analyze-card-title">📚 Exercise Library</div>
+          <div class="lib-filter">
+            <select id="lib-muscle" onchange="filterExercises()">
+              <option value="">กล้ามเนื้อทั้งหมด</option>
+              <option value="chest">Chest</option>
+              <option value="back">Back</option>
+              <option value="legs">Legs</option>
+              <option value="shoulders">Shoulders</option>
+              <option value="core">Core</option>
+              <option value="cardio">Cardio</option>
+              <option value="arms">Arms</option>
+            </select>
+            <select id="lib-equipment" onchange="filterExercises()">
+              <option value="">อุปกรณ์ทั้งหมด</option>
+              <option value="bodyweight">Bodyweight</option>
+              <option value="dumbbell">ดัมเบล</option>
+              <option value="barbell">บาร์เบล</option>
+              <option value="pullupbar">บาร์โหน</option>
+              <option value="cable">เคเบิ้ล</option>
+              <option value="kettlebell">Kettlebell</option>
+            </select>
+            <select id="lib-diff" onchange="filterExercises()">
+              <option value="">ทุกระดับ</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+            </select>
+          </div>
+          <div id="exercise-lib-count" class="lib-count"></div>
+          <div id="exercise-library-list" class="ex-lib-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ AI COACH ═══════════════════════════════════════════ -->
+    <section id="screen-coach" class="app-screen">
+      <div class="coach-header">
+        <div class="coach-avatar">🤖</div>
+        <div style="flex:1">
+          <div class="coach-title">โค้ช AI</div>
+          <div class="coach-sub">ถามได้ทุกเรื่องเกี่ยวกับการฝึก</div>
+        </div>
+        <div class="provider-badge" id="provider-badge">GPT-4o-mini</div>
+      </div>
+      <div id="chat-messages" class="chat-area">
+        <div class="chat-msg ai-msg">
+          <div class="chat-bubble">สวัสดีครับ! ผมคือโค้ช AI วิเคราะห์ฟิตเนสแบบ Real-time ถามได้เลยครับ 💪</div>
+        </div>
+      </div>
+      <div class="chat-input-wrap">
+        <div class="chat-quick-btns">
+          <button onclick="quickAsk('ควรฝึก pullup ยังไง')">💪 pullup</button>
+          <button onclick="quickAsk('กินโปรตีนเท่าไรดี')">🥩 โปรตีน</button>
+          <button onclick="quickAsk('วันนี้ควรพักไหม')">😴 พักดีไหม</button>
+          <button onclick="quickAsk('สร้างโปรแกรมฝึกสัปดาห์นี้ให้หน่อย')">📋 โปรแกรม</button>
+          <button onclick="quickAsk('วิธีลดไขมันเร็วที่สุด')">🔥 ลดไขมัน</button>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="ถามโค้ช AI..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send-btn" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ SETTINGS ════════════════════════════════════════════ -->
+    <section id="screen-settings" class="app-screen">
+      <div class="screen-scroll">
+        <div class="screen-header"><h2>ตั้งค่า</h2></div>
+
+        <div class="settings-section">
+          <div class="settings-label">🤖 เลือก AI Provider</div>
+
+          <!-- Fix 1.2: Security warning for client-side API key -->
+          <div class="api-key-warning">
+            ⚠️ <strong>หมายเหตุด้านความปลอดภัย</strong><br>
+            API Key เก็บในเครื่องคุณเท่านั้น (localStorage) — ไม่ส่งไปที่เซิร์ฟเวอร์ใด<br>
+            แต่ผู้ที่เข้าถึงเครื่องสามารถดูได้จาก DevTools
+            ใช้ key ที่มี usage limit เพื่อความปลอดภัย
+          </div>
+
+          <div class="ai-provider-tabs">
+            <button class="ai-tab active" id="tab-openai" onclick="switchProvider('openai')">
+              <span class="ai-tab-icon">🟢</span> OpenAI
+            </button>
+            <button class="ai-tab" id="tab-gemini" onclick="switchProvider('gemini')">
+              <span class="ai-tab-icon">🔵</span> Gemini
+            </button>
+          </div>
+
+          <div id="provider-openai" class="provider-panel">
+            <div class="provider-desc">GPT-4o-mini · แนะนำสำหรับคำตอบละเอียด</div>
+            <input type="password" id="api-key-openai" placeholder="sk-...">
+            <div class="key-hint">รับ key ที่ platform.openai.com — แนะนำตั้ง usage limit ไว้ด้วย</div>
+            <button class="btn-primary btn-full" onclick="saveApiKey()" style="margin-top:8px">💾 บันทึก OpenAI Key</button>
+          </div>
+
+          <div id="provider-gemini" class="provider-panel hidden">
+            <div class="provider-desc">Gemini 2.0 Flash · ฟรี quota สูง เหมาะใช้งานหนัก</div>
+            <input type="password" id="api-key-gemini" placeholder="AIza...">
+            <div class="key-hint">รับ key ฟรีที่ aistudio.google.com — มี rate limit โดยอัตโนมัติ</div>
+            <button class="btn-primary btn-full" onclick="saveApiKey()" style="margin-top:8px">💾 บันทึก Gemini Key</button>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">🎯 เป้าหมายส่วนตัว</div>
+          <div class="provider-desc" style="margin-bottom:10px">AI ใช้เป้าหมายนี้เพื่อสร้างโปรแกรมที่เหมาะกับคุณ</div>
+          <textarea id="custom-goal-settings" rows="3" placeholder="เช่น อยากดึงข้อ 20 ครั้ง ลดน้ำหนักเหลือ 80 กก. วิ่ง 1.6 กม. ต่ำกว่า 7:30 ภายใน 6 เดือน"></textarea>
+          <button class="btn-primary btn-full" onclick="saveCustomGoal()" style="margin-top:8px">💾 บันทึกเป้าหมาย</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">📍 สถานที่ฝึก</div>
+          <div class="location-grid" id="location-grid">
+            <label class="loc-btn"><input type="radio" name="location" value="บ้าน"><span class="loc-icon">🏠</span><span class="loc-name">บ้าน</span></label>
+            <label class="loc-btn"><input type="radio" name="location" value="ฟิตเนส"><span class="loc-icon">🏋️</span><span class="loc-name">ฟิตเนส</span></label>
+            <label class="loc-btn"><input type="radio" name="location" value="สวนสาธารณะ"><span class="loc-icon">🌳</span><span class="loc-name">สวนสาธารณะ</span></label>
+            <label class="loc-btn"><input type="radio" name="location" value="สนามกีฬา"><span class="loc-icon">🏟️</span><span class="loc-name">สนามกีฬา</span></label>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">🛠️ อุปกรณ์ที่มี</div>
+          <div class="provider-desc" style="margin-bottom:12px">AI เลือกท่าออกกำลังกายที่ใช้กับอุปกรณ์ของคุณเท่านั้น</div>
+          <div class="equipment-grid" id="equipment-grid">
+            <label class="eq-btn"><input type="checkbox" value="ไม่มีอุปกรณ์ (Bodyweight)"><span class="eq-icon">🤸</span><span class="eq-name">Bodyweight</span></label>
+            <label class="eq-btn"><input type="checkbox" value="บาร์โหน"><span class="eq-icon">🔝</span><span class="eq-name">บาร์โหน</span></label>
+            <label class="eq-btn"><input type="checkbox" value="ดัมเบล"><span class="eq-icon">🏋️</span><span class="eq-name">ดัมเบล</span></label>
+            <label class="eq-btn"><input type="checkbox" value="บาร์เบล"><span class="eq-icon">⚖️</span><span class="eq-name">บาร์เบล</span></label>
+            <label class="eq-btn"><input type="checkbox" value="เคเบิ้ลแมชชีน"><span class="eq-icon">🔧</span><span class="eq-name">เคเบิ้ล</span></label>
+            <label class="eq-btn"><input type="checkbox" value="ลู่วิ่ง"><span class="eq-icon">🏃</span><span class="eq-name">ลู่วิ่ง</span></label>
+            <label class="eq-btn"><input type="checkbox" value="จักรยาน"><span class="eq-icon">🚴</span><span class="eq-name">จักรยาน</span></label>
+            <label class="eq-btn"><input type="checkbox" value="ยางยืด Resistance Band"><span class="eq-icon">🔴</span><span class="eq-name">ยางยืด</span></label>
+            <label class="eq-btn"><input type="checkbox" value="กล่องกระโดด Box"><span class="eq-icon">📦</span><span class="eq-name">Box Jump</span></label>
+            <label class="eq-btn"><input type="checkbox" value="ลูกน้ำหนัก Kettlebell"><span class="eq-icon">⚙️</span><span class="eq-name">Kettlebell</span></label>
+          </div>
+          <button class="btn-primary btn-full" onclick="saveEquipment()" style="margin-top:12px">💾 บันทึกอุปกรณ์</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">โปรไฟล์</div>
+          <div class="profile-info" id="profile-info-box"></div>
+          <button class="btn-outline btn-full" onclick="editProfile()">แก้ไขโปรไฟล์</button>
+          <button class="btn-outline btn-full" style="margin-top:8px" onclick="ProfileUI.show('profile-select-screen'); ProfileUI.renderProfileList()">🔄 สลับโปรไฟล์</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">💾 สำรอง / กู้คืนข้อมูล</div>
+          <div class="profile-backup-btns">
+            <button class="btn-outline" style="flex:1" onclick="ProfileUI.exportAll()">📤 Export ทั้งหมด</button>
+            <button class="btn-outline" style="flex:1" onclick="document.getElementById('import-profile-file').click()">📥 Import</button>
+          </div>
+          <input type="file" id="import-profile-file" accept=".json" style="display:none" onchange="ProfileUI.importFile(event)">
+          <button class="btn-outline btn-full" style="margin-top:8px" onclick="exportData()">📤 Export (Legacy)</button>
+        </div>
+
+        <div class="settings-section">
+          <div class="settings-label">อันตราย</div>
+          <button class="btn-danger btn-full" onclick="resetAll()">🗑️ รีเซ็ตข้อมูลทั้งหมด</button>
+          <button class="btn-diagnostic" onclick="typeof Logger !== 'undefined' && Logger.exportDiagnostic()">🔍 Export Diagnostic Log</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="goTo('dashboard')" data-tab="dashboard"><span class="nav-icon">🏠</span><span class="nav-label">หน้าหลัก</span></button>
+    <button class="nav-btn" onclick="goTo('workout')" data-tab="workout"><span class="nav-icon">💪</span><span class="nav-label">บันทึก</span></button>
+    <button class="nav-btn" onclick="goTo('character')" data-tab="character"><span class="nav-icon">⚔️</span><span class="nav-label">ตัวละคร</span></button>
+    <button class="nav-btn" onclick="goTo('program')" data-tab="program"><span class="nav-icon">📋</span><span class="nav-label">ตารางฝึก</span></button>
+    <button class="nav-btn" onclick="goTo('missions')" data-tab="missions"><span class="nav-icon">🎯</span><span class="nav-label">ภารกิจ</span></button>
+    <button class="nav-btn" onclick="goTo('progress')" data-tab="progress"><span class="nav-icon">📈</span><span class="nav-label">ก้าวหน้า</span></button>
+    <button class="nav-btn" onclick="goTo('stats')" data-tab="stats"><span class="nav-icon">📊</span><span class="nav-label">สถิติ</span></button>
+    <button class="nav-btn" onclick="goTo('analyze')" data-tab="analyze"><span class="nav-icon">🧠</span><span class="nav-label">วิเคราะห์</span></button>
+    <button class="nav-btn" onclick="goTo('coach')" data-tab="coach"><span class="nav-icon">🤖</span><span class="nav-label">โค้ช AI</span></button>
+    <button class="nav-btn" onclick="goTo('settings')" data-tab="settings"><span class="nav-icon">⚙️</span><span class="nav-label">ตั้งค่า</span></button>
+  </nav>
+
+</div><!-- /main-app -->
+
+<!-- WORKOUT MODAL -->
+<div id="workout-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>บันทึกการฝึก</h3>
+      <button class="modal-close" onclick="closeWorkoutModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>วันที่</label><input type="date" id="wk-date"></div>
+      <div class="form-group">
+        <label>ประเภทการฝึก</label>
+        <select id="wk-type">
+          <option value="push">Push Day</option>
+          <option value="pull">Pull Day</option>
+          <option value="run">Run Day</option>
+          <option value="core">Core Day</option>
+          <option value="fullbody">Full Body</option>
+          <option value="cardio">Cardio</option>
+          <option value="recovery">Recovery</option>
+        </select>
+      </div>
+      <div id="exercise-entries"></div>
+      <button class="btn-outline btn-full" onclick="addExerciseEntry()">+ เพิ่มท่าออกกำลัง</button>
+      <div class="form-group" style="margin-top:12px">
+        <label>หมายเหตุ</label>
+        <textarea id="wk-notes" rows="2" placeholder="ความรู้สึก, สภาพร่างกาย..."></textarea>
+      </div>
+      <!-- BATTLE LOG: Game outcomes per set -->
+      <div id="battle-log-container" style="margin-top:10px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary btn-full" onclick="saveWorkout()">⚔️ บันทึก + รายงานผล</button>
+    </div>
+  </div>
+</div>
+
+<!-- FITNESS TEST MODAL -->
+<div id="fitness-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>ทดสอบสมรรถภาพ</h3>
+      <button class="modal-close" onclick="closeFitnessTest()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:#aaa;font-size:13px;margin-bottom:16px">ทดสอบทุก 4 สัปดาห์เพื่อดูความก้าวหน้า</p>
+      <div class="form-group"><label>วันที่</label><input type="date" id="ft-date"></div>
+      <div class="form-group"><label>Pushups (2 นาที)</label><input type="number" id="ft-pushups" placeholder="0"></div>
+      <div class="form-group"><label>Situps (2 นาที)</label><input type="number" id="ft-situps" placeholder="0"></div>
+      <div class="form-group"><label>Pullups (max)</label><input type="number" id="ft-pullups" placeholder="0"></div>
+      <div class="form-group"><label>วิ่ง 1.6 กม. (นาที:วินาที)</label><input type="text" id="ft-run" placeholder="8:30"></div>
+      <div class="form-group"><label>น้ำหนัก (กก.)</label><input type="number" id="ft-weight" placeholder="96" step="0.1"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary btn-full" onclick="saveFitnessTest()">บันทึก (+50 XP)</button>
+    </div>
+  </div>
+</div>
+
+<!-- YEAR PROGRAM MODAL -->
+<div id="year-modal" class="modal-overlay hidden">
+  <div class="modal-box modal-wide">
+    <div class="modal-header">
+      <h3>📅 12 เดือน Periodization</h3>
+      <button class="modal-close" onclick="document.getElementById('year-modal').classList.add('hidden')">✕</button>
+    </div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto">
+      <div id="year-program-result" style="white-space:pre-wrap;font-size:13px;line-height:1.8;color:#ccc"></div>
+    </div>
+  </div>
+</div>
+
+<!-- iOS BOTTOM SHEET -->
+<div class="modal-sheet" id="modalSheet" role="dialog" aria-modal="true">
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <div class="sheet-content" id="sheetContent">
+    <div class="sheet-handle"></div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<!-- PULL-TO-REFRESH INDICATOR — DISABLED -->
+<div class="ptr-indicator" id="ptrIndicator" style="display:none"></div>
+
+<!-- ⚔ COMBAT SESSION OVERLAY -->
+<div id="combat-overlay" class="combat-overlay hidden">
+
+  <div class="combat-header">
+    <div class="combat-title">⚔ COMBAT MODE</div>
+    <div class="combat-header-right">
+      <span id="combat-total" class="combat-total-label"></span>
+      <span id="combat-readiness" class="combat-readiness"></span>
+    </div>
+  </div>
+
+  <div class="combat-body">
+
+    <div id="combat-exercise" class="combat-exercise">—</div>
+    <div id="combat-set" class="combat-set">SET 1 / 3</div>
+    <div id="combat-progression" class="combat-progression"></div>
+
+    <div class="combat-controls">
+      <button onclick="combatFinishSet()" class="btn-combat">✅ FINISH SET</button>
+      <button onclick="combatSkip()" class="btn-skip">SKIP ›</button>
+    </div>
+
+    <div class="combat-rest-wrap">
+      <div class="combat-rest-label">REST: <span id="combat-timer">0</span>s</div>
+      <div class="combat-rest-track"><div id="combat-rest-bar" class="combat-rest-bar"></div></div>
+    </div>
+
+  </div>
+
+  <div class="combat-footer">
+    <button onclick="combatEnd()" class="btn-exit">✖ END SESSION</button>
+  </div>
+
+</div>
+
+<!-- DYNAMIC ISLAND NOTIFICATION -->
+<div class="di-notification" id="diNotification"></div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPT LOAD ORDER — v2 Modular Architecture
+     ─────────────────────────────────────────────────────────
+     Layer 0: DATA       — ไม่มี deps
+     Layer 1: STORAGE    — db + state_manager (ต้องพร้อมก่อนทุกอย่าง)
+     Layer 2: CORE RPG   — conversion → attribute → rank → medal
+     Layer 3: GOAL       — goalEngine (ใหม่) + fatigueEngine (ใหม่)
+     Layer 4: ENGINE     — production engine หลัก
+     Layer 5: ADAPTIVE   — progression / trend / decision
+     Layer 6: AI PACK    — providers → local → hybrid → coach
+     Layer 7: APP        — app logic + RPG controller + game loop
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- Layer 0: Data -->
+<script src="data/exerciseDB.js" defer></script>
+
+<!-- Layer 1: Storage (โหลดก่อนทุกอย่าง) -->
+<script src="app/db.js" defer></script>
+<script src="app/state_manager.js" defer></script>
+
+<!-- Layer 1b: Profile System (ต้องพร้อมก่อน Engines) -->
+<script src="profile/storageEngine.js" defer></script>
+<script src="profile/profileManager.js" defer></script>
+
+<!-- Layer 1c: Safety + Validation (โหลดก่อน Engines ทุกตัว) -->
+<script src="core/safeNumber.js" defer></script>
+<script src="core/stateValidator.js" defer></script>
+<script src="core/errorLogger.js" defer></script>
+
+<!-- Layer 2: Core RPG Engine -->
+<script src="core/conversionEngine.js" defer></script>
+<script src="core/attributeEngine.js" defer></script>
+<script src="core/rankSystem.js" defer></script>
+<script src="core/medalSystem.js" defer></script>
+
+<!-- Layer 3: Goal + Fatigue + Template Systems -->
+<script src="core/goalEngine.js" defer></script>
+<script src="core/fatigueEngine.js" defer></script>
+<script src="core/templateEngine.js" defer></script>
+
+<!-- Layer 4: Production Engine -->
+<script src="app/engine.js" defer></script>
+<script src="app/ascension_engine.js" defer></script>
+<script src="app/elite_engine.js" defer></script>
+
+<!-- Layer 5: Adaptive Pack -->
+<script src="app/progression_engine.js" defer></script>
+<script src="app/trend_analyzer.js" defer></script>
+<script src="app/decision_engine.js" defer></script>
+
+<!-- Layer 6: AI System Pack -->
+<script src="ai/ai_utils.js" defer></script>
+<script src="ai/ai_prompt_templates.js" defer></script>
+<script src="ai/ai_providers.js" defer></script>
+<script src="ai/ai_local_engine.js" defer></script>
+<script src="ai/ai_hybrid_engine.js" defer></script>
+<script src="ai/coach_engine.js" defer></script>
+
+<!-- Layer 7: App Logic -->
+<script src="app/app.js" defer></script>
+<script src="app/conversion_layer.js" defer></script>
+<script src="app/meta_system.js" defer></script>
+<script src="app/game_loop.js" defer></script>
+<script src="app/rpgController.js" defer></script>
+
+<!-- Layer 8: Goal Config UI Controller (ใหม่ — inline) -->
+<script defer>
+/* Goal Config Onboarding Controller */
+function goToGoalConfig() {
+  const name   = document.getElementById('ob-name')?.value?.trim();
+  const age    = document.getElementById('ob-age')?.value;
+  const height = document.getElementById('ob-height')?.value;
+  const weight = document.getElementById('ob-weight')?.value;
+  const fitness = document.querySelector('input[name="fitness"]:checked')?.value || 'beginner';
+
+  if (!name) { alert('กรุณากรอกชื่อ'); return; }
+
+  // Save profile to localStorage (compat กับ app.js เดิม)
+  const profile = { name, age: +age, height: +height, weight: +weight, fitness };
+  localStorage.setItem('profile_v1', JSON.stringify(profile));
+
+  // v2: Update active ProfileManager profile with body data
+  if (typeof ProfileManager !== 'undefined' && ProfileManager.hasActiveProfile()) {
+    ProfileManager.updateProfile(ProfileManager.getActiveId(), {
+      name,
+      bodyProfile: { age: +age, height: +height, weight: +weight, fitnessLevel: fitness },
+    });
+  }
+
+  document.getElementById('onboarding-screen').classList.add('hidden');
+  document.getElementById('goal-config-screen').classList.remove('hidden');
+}
+
+function goToBaselineTest() {
+  const primary   = document.querySelector('input[name="primary_goal"]:checked')?.value || 'hybrid';
+  const secondary = document.querySelector('input[name="secondary_goal"]:checked')?.value;
+
+  // Collect body focus
+  const bodyFocus = {};
+  document.querySelectorAll('.focus-btns').forEach(group => {
+    const area = group.dataset.area;
+    const active = group.querySelector('.focus-btn.active');
+    bodyFocus[area] = active ? parseInt(active.dataset.val) : 2;
+  });
+
+  // Save goal config
+  const goalData = {
+    primaryGoal:   primary,
+    secondaryGoal: secondary === 'none' ? null : secondary,
+    bodyFocus,
+  };
+  localStorage.setItem('operator_goal_config_v1', JSON.stringify({ ...goalData, savedAt: Date.now() }));
+
+  document.getElementById('goal-config-screen').classList.add('hidden');
+  document.getElementById('baseline-screen').classList.remove('hidden');
+}
+
+function goToStep(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  if (step === 1) document.getElementById('onboarding-screen').classList.remove('hidden');
+  if (step === 2) document.getElementById('goal-config-screen').classList.remove('hidden');
+}
+
+function saveFullOnboarding() {
+  // Save baseline test results
+  const baseline = {
+    pushup_max:  parseFloat(document.getElementById('bl-pushup')?.value) || 0,
+    pullup_max:  parseFloat(document.getElementById('bl-pullup')?.value) || 0,
+    run_2km_min: parseFloat(document.getElementById('bl-run2km')?.value) || 0,
+    plank_min:   parseFloat(document.getElementById('bl-plank')?.value) || 0,
+    daysPerWeek: parseInt(document.querySelector('input[name="days_per_week"]:checked')?.value) || 4,
+    recordedAt:  new Date().toISOString(),
+  };
+  localStorage.setItem('operator_baseline_v1', JSON.stringify(baseline));
+
+  // Update goal config with baseline
+  try {
+    const gc = JSON.parse(localStorage.getItem('operator_goal_config_v1') || '{}');
+    gc.baseline = baseline;
+    localStorage.setItem('operator_goal_config_v1', JSON.stringify(gc));
+  } catch {}
+
+  // If RankSystem loaded, record physical tests
+  if (typeof RankSystem !== 'undefined' && baseline.pushup_max > 0) {
+    RankSystem.recordPhysicalTest('pushup_max', baseline.pushup_max);
+    if (baseline.pullup_max > 0) RankSystem.recordPhysicalTest('pullup_max', baseline.pullup_max);
+    if (baseline.run_2km_min > 0) RankSystem.recordPhysicalTest('run_2km_min', baseline.run_2km_min);
+    if (baseline.plank_min > 0)   RankSystem.recordPhysicalTest('plank_min', baseline.plank_min);
+  }
+
+  // ── v2: Sync baseline + goal config into active profile ──
+  if (typeof ProfileManager !== 'undefined' && ProfileManager.hasActiveProfile()) {
+    const pid = ProfileManager.getActiveId();
+    // Read goal config from UI
+    const _savedGoal = JSON.parse(localStorage.getItem('operator_goal_config_v1') || '{}');
+    const primaryGoal = _savedGoal.primaryGoal || 'hybrid';
+    const secondaryGoal = _savedGoal.secondaryGoal || null;
+    ProfileManager.updateProfile(pid, {
+      goalConfig: {
+        primaryGoal,
+        secondaryGoal,
+        baseline,
+        daysPerWeek: baseline.daysPerWeek,
+      },
+    });
+    // Generate 4-week plan
+    if (typeof TemplateEngine !== 'undefined') {
+      const profile = ProfileManager.getActive();
+      const plan = TemplateEngine.generate4WeekPlan({
+        primaryGoal,
+        secondaryGoal,
+        daysPerWeek: baseline.daysPerWeek,
+        fitnessLevel: profile?.bodyProfile?.fitnessLevel || 'beginner',
+        equipment: [],
+      });
+      TemplateEngine.savePlan(plan, pid);
+    }
+    // Save state snapshot
+    ProfileManager.saveStateToProfile();
+  }
+
+  // Call original saveOnboarding if exists
+  if (typeof saveOnboarding === 'function') {
+    saveOnboarding();
+  } else {
+    // Fallback: mark setup done and reload
+    localStorage.setItem('operator_setup_done', '1');
+    location.reload();
+  }
+}
+
+// Focus button interaction
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.focus-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const group = btn.closest('.focus-btns');
+      group.querySelectorAll('.focus-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.goal-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.goal-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+
+  // Init exercise library on first render
+  if (document.getElementById('exercise-library-list')) {
+    filterExercises();
+  }
+});
+
+/* ── Exercise Library Filter ──────────────────────────── */
+function filterExercises() {
+  const listEl   = document.getElementById('exercise-library-list');
+  const countEl  = document.getElementById('exercise-lib-count');
+  if (!listEl) return;
+
+  const db = window.exerciseDB || (typeof EXERCISE_DB !== 'undefined' ? EXERCISE_DB : []);
+  if (!db.length) {
+    listEl.innerHTML = '<div class="lib-empty">ไม่พบข้อมูล Exercise DB</div>';
+    return;
+  }
+
+  const muscle    = document.getElementById('lib-muscle')?.value    || '';
+  const equipment = document.getElementById('lib-equipment')?.value || '';
+  const diff      = document.getElementById('lib-diff')?.value      || '';
+
+  let filtered = db.filter(ex => {
+    if (muscle    && ex.muscle    !== muscle)    return false;
+    if (equipment && ex.equipment !== equipment) return false;
+    if (diff      && ex.difficulty !== diff)     return false;
+    return true;
+  });
+
+  if (countEl) countEl.textContent = `${filtered.length} ท่า`;
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div class="lib-empty">ไม่พบท่าที่ตรงกัน</div>';
+    return;
+  }
+
+  // Show max 40 results for perf
+  const show = filtered.slice(0, 40);
+  listEl.innerHTML = show.map(ex => `
+    <div class="lib-item">
+      <div class="lib-item-header">
+        <span class="lib-item-name">${ex.nameTH || ex.name}</span>
+        <span class="lib-item-badge lib-diff-${ex.difficulty}">${ex.difficulty}</span>
+      </div>
+      <div class="lib-item-meta">
+        ${ex.muscle} · ${ex.equipment} · ${ex.sets}×${ex.reps} · พัก ${ex.rest}
+      </div>
+      ${ex.tips ? `<div class="lib-item-tip">💡 ${ex.tips}</div>` : ''}
+    </div>
+  `).join('');
+
+  if (filtered.length > 40) {
+    listEl.innerHTML += `<div class="lib-more">แสดง 40/${filtered.length} — ใช้ filter เพื่อค้นหา</div>`;
+  }
+}
+</script>
+
+<!-- ═══ PROFILE UI CONTROLLER ════════════════════════════════ -->
+<script defer>
+const ProfileUI = (() => {
+
+  function _hideAll() {
+    ['splash-screen','profile-select-screen','onboarding-screen',
+     'goal-config-screen','baseline-screen','main-app'].forEach(id => {
+      document.getElementById(id)?.classList.add('hidden');
+    });
+  }
+
+  function show(screenId) {
+    _hideAll();
+    document.getElementById(screenId)?.classList.remove('hidden');
+  }
+
+  /* ── Profile List Render ──────────────────────────────── */
+  function renderProfileList() {
+    const list = document.getElementById('profile-list');
+    if (!list) return;
+
+    const profiles = (typeof StorageEngine !== 'undefined')
+      ? Object.values(StorageEngine.loadAllProfiles())
+      : [];
+
+    if (!profiles.length) {
+      list.innerHTML = '<div class="profile-empty">ยังไม่มีโปรไฟล์ — กดสร้างใหม่ด้านล่าง</div>';
+      return;
+    }
+
+    // Sort by updatedAt desc
+    profiles.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+    list.innerHTML = profiles.map(p => {
+      const rankId   = p.rank?.currentRankId || 0;
+      const rankList = (typeof RankSystem !== 'undefined') ? RankSystem.RANKS : [];
+      const rank     = rankList[rankId] || { nameThai: 'พลเรือน', emoji: '👤' };
+      const streak   = p.streak || 0;
+      const sessions = p.stats?.totalSessions || p.rank?.totalSessions || 0;
+      const lastDate = p.lastWorkoutDate
+        ? new Date(p.lastWorkoutDate).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })
+        : 'ยังไม่ได้ฝึก';
+
+      return `
+        <div class="profile-card" onclick="ProfileUI.selectProfile('${p.id}')">
+          <div class="profile-card-left">
+            <div class="profile-card-emoji">${rank.emoji}</div>
+            <div class="profile-card-info">
+              <div class="profile-card-name">${p.name}</div>
+              <div class="profile-card-rank">${rank.nameThai}</div>
+              <div class="profile-card-meta">🔥 ${streak}วัน | 💪 ${sessions} sessions | ${lastDate}</div>
+            </div>
+          </div>
+          <div class="profile-card-right">
+            <button class="btn-sm profile-delete-btn"
+              onclick="event.stopPropagation(); ProfileUI.confirmDelete('${p.id}', '${p.name}')">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Storage info
+    if (typeof StorageEngine !== 'undefined') {
+      const info = StorageEngine.getStorageInfo();
+      const el   = document.getElementById('storage-info');
+      if (el) el.textContent = `Storage: ${info.usedKB}KB / ${info.limitKB}KB (${info.percent}%)`;
+    }
+  }
+
+  /* ── Select Profile ──────────────────────────────────── */
+  function selectProfile(id) {
+    if (typeof ProfileManager === 'undefined') return;
+    const ok = ProfileManager.setActive(id);
+    if (!ok) return;
+
+    // ถ้า profile นี้ผ่าน onboarding แล้ว → ไป main app
+    const profile = ProfileManager.getActive();
+    const hasGoal = profile?.goalConfig?.primaryGoal && profile.goalConfig.primaryGoal !== 'hybrid'
+                 || profile?.goalConfig?.baseline?.pushup_max > 0;
+
+    if (hasGoal || profile?.stats?.totalSessions > 0) {
+      _hideAll();
+      document.getElementById('main-app')?.classList.remove('hidden');
+      // Trigger app reload
+      if (typeof loadApp === 'function') loadApp();
+      else if (typeof init === 'function') init();
+    } else {
+      // ยัง onboarding ไม่สมบูรณ์
+      show('onboarding-screen');
+      // Pre-fill ชื่อ
+      const nameEl = document.getElementById('ob-name');
+      if (nameEl) nameEl.value = profile.name || '';
+    }
+  }
+
+  /* ── Create Profile ──────────────────────────────────── */
+  function showCreate() {
+    document.getElementById('profile-create-modal')?.classList.remove('hidden');
+    document.getElementById('new-profile-name')?.focus();
+  }
+
+  function hideCreate() {
+    document.getElementById('profile-create-modal')?.classList.add('hidden');
+  }
+
+  function confirmCreate() {
+    const name     = document.getElementById('new-profile-name')?.value?.trim();
+    const age      = document.getElementById('new-profile-age')?.value;
+    const weight   = document.getElementById('new-profile-weight')?.value;
+    const fitness  = document.querySelector('input[name="new-fitness"]:checked')?.value || 'beginner';
+
+    if (!name) { alert('กรุณากรอกชื่อ'); return; }
+    if (typeof ProfileManager === 'undefined') { alert('ระบบยังโหลดไม่เสร็จ'); return; }
+
+    const result = ProfileManager.createProfile(name, { age, weight, fitnessLevel: fitness });
+    if (!result.success) { alert(result.error); return; }
+
+    ProfileManager.setActive(result.id);
+    hideCreate();
+
+    // ไป Onboarding step 1 (goal config)
+    const nameEl = document.getElementById('ob-name');
+    if (nameEl) nameEl.value = name;
+    show('onboarding-screen');
+  }
+
+  /* ── Delete Profile ──────────────────────────────────── */
+  function confirmDelete(id, name) {
+    if (!confirm(`ลบโปรไฟล์ "${name}" ?\nข้อมูลทั้งหมดจะหายถาวร`)) return;
+    if (typeof StorageEngine !== 'undefined') StorageEngine.deleteProfile(id);
+    renderProfileList();
+  }
+
+  /* ── Export / Import ─────────────────────────────────── */
+  function exportAll() {
+    if (typeof StorageEngine !== 'undefined') StorageEngine.exportAll();
+  }
+
+  function importFile(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const result = (typeof StorageEngine !== 'undefined')
+        ? StorageEngine.importData(ev.target.result)
+        : { success: false };
+      if (result.success) {
+        alert(`นำเข้าสำเร็จ ${result.imported} โปรไฟล์`);
+        renderProfileList();
+      } else {
+        alert('ไฟล์ไม่ถูกต้อง: ' + result.error);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  return { show, renderProfileList, selectProfile, showCreate, hideCreate, confirmCreate, confirmDelete, exportAll, importFile };
+})();
+
+/* ═══ APP INITIALIZER — v2 Multi-Profile ═══════════════════ */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    // FIX [Medium]: Validate exerciseDB on startup to catch missing keys before runtime NaN cascade
+    if (typeof StateValidator !== 'undefined' && typeof EXERCISE_DB !== 'undefined') {
+      const dbObj = {};
+      if (Array.isArray(EXERCISE_DB)) { dbObj['all'] = EXERCISE_DB; }
+      else Object.assign(dbObj, EXERCISE_DB);
+      const { valid, errors } = StateValidator.validateExerciseDB(dbObj);
+      if (!valid && typeof Logger !== 'undefined') {
+        Logger.warn('ExerciseDB', 'Validation issues:', errors);
+      }
+    }
+
+    // Hide splash
+    document.getElementById('splash-screen')?.classList.add('hidden');
+
+    if (typeof ProfileManager === 'undefined' || typeof StorageEngine === 'undefined') {
+      // Engines not loaded yet — fallback to original flow
+      const legacy = localStorage.getItem('profile_v1');
+      if (legacy) {
+        document.getElementById('main-app')?.classList.remove('hidden');
+      } else {
+        document.getElementById('onboarding-screen')?.classList.remove('hidden');
+      }
+      return;
+    }
+
+    // ── Multi-Profile Flow ──────────────────────────────
+    if (!ProfileManager.hasAnyProfile()) {
+      // ไม่มีโปรไฟล์เลย — ไปสร้างใหม่ทันที
+      ProfileUI.show('profile-select-screen');
+      ProfileUI.renderProfileList();
+    } else if (!ProfileManager.hasActiveProfile()) {
+      // มีโปรไฟล์แต่ไม่มี active — ไปเลือก
+      ProfileUI.show('profile-select-screen');
+      ProfileUI.renderProfileList();
+    } else {
+      // มี active profile — โหลดแอพ
+      const profile = ProfileManager.getActive();
+      ProfileManager.setActive(profile.id); // sync engines
+      document.getElementById('main-app')?.classList.remove('hidden');
+      if (typeof loadApp === 'function') loadApp();
+      else if (typeof init === 'function') init();
+    }
+  }, 1200); // splash duration
+});
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(reg => console.log('[SW] Registered', reg.scope))
+        .catch(err => console.log('[SW] Failed', err));
+    });
+  }
+</script>
+</body>
+</html>
